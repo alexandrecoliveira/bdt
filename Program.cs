@@ -45,7 +45,7 @@ namespace RestApi
 
         private static void writeJsonToCsv(dynamic resultJson)
         {
-            string fileName = @"C:\Users\alexa\Documents\nba.csv";
+            string fileName = @"C:\Users\alexa\Documents\nba3.csv";
             var id = resultJson.id;
             var firstName = resultJson.first_name;
             var lastName = resultJson.last_name;
@@ -61,8 +61,17 @@ namespace RestApi
 
             try
             {
-                using (StreamWriter sw = File.CreateText(fileName))
-                {
+                //Teste usado para definir se é necessário escrever o cabeçalho ou não
+                if (!File.Exists(fileName))
+                {                    
+                    using (StreamWriter sw = File.AppendText(fileName))
+                    {
+                        sw.WriteLine("Id;FIRST NAME;LAST NAME;POSITION;WEIGHT POUNDS;TEAM ID;TEAM ABBREVIATION;TEAM CITY;TEAM CONF;TEAM DIVISION;TEAM FULL NAME;TEAM NAME;");
+                    }
+                }
+
+                using (StreamWriter sw = File.AppendText(fileName))
+                {                    
                     sw.WriteLine(id + ";" + firstName + ";" + lastName + ";" + position + ";" + weightPounds + ";" + teamId + ";" + teamAbbrev + ";" + teamCity + ";" + teamConf + ";" + teamDivision + ";" + teamFullName + ";" + teamName + ";");
                 }
             }    
