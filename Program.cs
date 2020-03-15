@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -32,24 +33,42 @@ namespace RestApi
                     var player = await response.Content.ReadAsStringAsync();
                     var resultJson = JsonConvert.DeserializeObject<dynamic>(player);
 
-                    var id = resultJson.id;
-                    var firstName = resultJson.first_name;
-                    var lastName = resultJson.last_name;
-                    var position = resultJson.position;
-                    var weightPounds = resultJson.weight_pounds;
-                    var teamId = resultJson.team.id;
-                    var teamAbbrev = resultJson.team.abbreviation;
-                    var teamCity = resultJson.team.city;
-                    var teamConf = resultJson.team.conference;
-                    var teamDivision = resultJson.team.division;
-                    var teamFullName = resultJson.team.full_name;
-                    var teamName = resultJson.team.name;
+                    writeJsonToCsv(resultJson);
                     
                 }
                 else
                 {
                     Console.WriteLine("Erro - Sem sucesso na requisição com código " + response.StatusCode);
                 }
+            }
+        }
+
+        private static void writeJsonToCsv(dynamic resultJson)
+        {
+            string fileName = @"C:\Users\alexa\Documents\nba.csv";
+            var id = resultJson.id;
+            var firstName = resultJson.first_name;
+            var lastName = resultJson.last_name;
+            var position = resultJson.position;
+            var weightPounds = resultJson.weight_pounds;
+            var teamId = resultJson.team.id;
+            var teamAbbrev = resultJson.team.abbreviation;
+            var teamCity = resultJson.team.city;
+            var teamConf = resultJson.team.conference;
+            var teamDivision = resultJson.team.division;
+            var teamFullName = resultJson.team.full_name;
+            var teamName = resultJson.team.name;
+
+            try
+            {
+                using (StreamWriter sw = File.CreateText(fileName))
+                {
+                    sw.WriteLine(id + ";" + firstName + ";" + lastName + ";" + position + ";" + weightPounds + ";" + teamId + ";" + teamAbbrev + ";" + teamCity + ";" + teamConf + ";" + teamDivision + ";" + teamFullName + ";" + teamName + ";");
+                }
+            }    
+            catch(Exception ex)
+            {
+                Console.WriteLine("Erro: " + ex.Message);
             }
         }
     }
