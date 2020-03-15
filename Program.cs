@@ -11,10 +11,16 @@ namespace RestApi
     {
         static void Main(string[] args)
         {
-            Console.Write("Digite um ID .: ");
-            int idPlayer = int.Parse(Console.ReadLine());
-
-            CallWebAPIAsync(idPlayer).Wait();
+            int cont = 0;
+            do
+            {
+                Console.Write("Digite um ID .: ");
+                int idPlayer = int.Parse(Console.ReadLine());
+                CallWebAPIAsync(idPlayer).Wait();
+                Console.Write("Continuar (S/N): ");
+                cont = Console.ReadLine() == "S" ? 1 : 0;
+            } while (cont == 1);
+            
             Console.WriteLine("FIM");
         }
 
@@ -32,9 +38,7 @@ namespace RestApi
                 {
                     var player = await response.Content.ReadAsStringAsync();
                     var resultJson = JsonConvert.DeserializeObject<dynamic>(player);
-
-                    writeJsonToCsv(resultJson);
-                    
+                    writeJsonToCsv(resultJson);                   
                 }
                 else
                 {
