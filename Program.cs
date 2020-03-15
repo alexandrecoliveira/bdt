@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Newtonsoft.Json;  //Necessário para usar o Deserialize
 
 namespace RestApi
 {
@@ -29,14 +29,26 @@ namespace RestApi
                 HttpResponseMessage response = await client.GetAsync("api/v1/players/" +  idPlayer);
                 if (response.IsSuccessStatusCode)
                 {
-                    var p = await response.Content.ReadAsStringAsync();
-                    var j = JsonConvert.DeserializeObject<object>(p);
-                    Console.WriteLine(j);
+                    var player = await response.Content.ReadAsStringAsync();
+                    var resultJson = JsonConvert.DeserializeObject<dynamic>(player);
+
+                    var id = resultJson.id;
+                    var firstName = resultJson.first_name;
+                    var lastName = resultJson.last_name;
+                    var position = resultJson.position;
+                    var weightPounds = resultJson.weight_pounds;
+                    var teamId = resultJson.team.id;
+                    var teamAbbrev = resultJson.team.abbreviation;
+                    var teamCity = resultJson.team.city;
+                    var teamConf = resultJson.team.conference;
+                    var teamDivision = resultJson.team.division;
+                    var teamFullName = resultJson.team.full_name;
+                    var teamName = resultJson.team.name;
                     
                 }
                 else
                 {
-                    Console.WriteLine("Error");
+                    Console.WriteLine("Erro - Sem sucesso na requisição com código " + response.StatusCode);
                 }
             }
         }
